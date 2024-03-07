@@ -1,0 +1,88 @@
+import os
+
+books_store = {}
+
+def clear_screen():
+    os.system("cls" if os.name == "nt" else "clear")
+
+def add_book():
+    clear_screen()
+    book_id = input("Enter the book ISBN: ")
+    book_name = input("Enter the book name: ")
+    book_author = input("Enter the book author: ")
+    books_store[book_id] = {"Title": book_name, "Author": book_author, "Available": True}
+    print("Success!")
+    print(f"The book '{book_name}' by '{book_author}' has been added successfully with the ISBN: '{book_id}'")
+
+def checkout_book():
+    clear_screen()
+    if not books_store:
+        print("There are no books available right now")
+    else:
+        book_id = input("Enter the book ISBN: ")
+        if book_id in books_store and books_store[book_id]["Available"]:
+            print(f"You borrowed the book {books_store[book_id]['Title']} now")
+            print("Enjoy, and keep it safe!")
+            books_store[book_id]["Available"] = False
+        else:
+            print("Sorry, we don't have this book or it is not available")
+            print("Try again later!")
+
+def checkin_book():
+    clear_screen()
+    book_id = input("Enter the book ISBN: ")
+    if book_id in books_store and not books_store[book_id]["Available"]:
+        print("We have this book now")
+        books_store[book_id]["Available"] = True
+        print("Thank you, I hope you enjoyed the book!")
+    else:
+        print("This is a new book.")
+        add = input("Do you want to add it? (y/n): ").lower()
+        if add.lower() == "y":
+            add_book()
+
+def view_books():
+    clear_screen()
+    if not books_store:
+        print("There is nothing to display. Please add items first.")
+    else:
+        for book_id, book_info in books_store.items():
+            print(f"Book ISBN: {book_id}")
+            for key, value in book_info.items():
+                print(f"{key:^10}: {value:^10}")
+            print("-" * 20)
+
+def main():
+    while True:
+        print("Welcome to our BOOK STORE. What do you want to do?")
+        print("""
+            1. Add
+            2. Check Out
+            3. Check In
+            4. List
+            5. Exit      
+        """)
+
+        user_input = input("enter a number: ")
+
+        if user_input == "1":
+            add_book()
+
+        elif user_input == "2":
+            checkout_book()
+
+        elif user_input == "3":
+            checkin_book()
+
+        elif user_input == "4":
+            view_books()
+
+        elif user_input == "5":
+            clear_screen()
+            exit()
+
+        else:
+            print("Invalid input, try again!")
+
+if __name__ == "__main__":
+    main()
